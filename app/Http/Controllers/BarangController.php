@@ -154,7 +154,6 @@ class BarangController extends Controller
         }
     }
 
-
     public function destroy($id){
         $data = Barang::find($id);
 
