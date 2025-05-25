@@ -48,9 +48,3 @@ Route::get('user/{id}', [UserController::class, 'show']);
 Route::post('user/store', [UserController::class, 'store']);
 Route::put('user/{id}', [UserController::class, 'update']);
 Route::delete('user/{id}', [UserController::class, 'destroy']);
-
-Route::get('/images/{filename}', function ($filename) {
-    $path = public_path('public/' . $filename);
-    if (!file_exists($path)) abort(404);
-    return response()->file($path);
-});
