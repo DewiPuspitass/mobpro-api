@@ -167,37 +167,37 @@ class UserController extends Controller
         }
     }
 
-    public function login(Request $request){
-        $user = User::where('email', $request->email)->first();
+    // public function login(Request $request){
+    //     $user = User::where('email', $request->email)->first();
 
-        if (!$user || !Hash::check($request->password, $user->password)) {
-            return response()->json(['message' => 'Invalid credentials'], 401);
-        }
+    //     if (!$user || !Hash::check($request->password, $user->password)) {
+    //         return response()->json(['message' => 'Invalid credentials'], 401);
+    //     }
 
-        $token = Str::random(60);
-        $user->remember_token = $token;
-        $user->save();
+    //     $token = Str::random(60);
+    //     $user->remember_token = $token;
+    //     $user->save();
 
-        return response()->json([
-            'message' => 'Login berhasil',
-            'token' => $token,
-            'user' => $user
-        ]);
-    }
+    //     return response()->json([
+    //         'message' => 'Login berhasil',
+    //         'token' => $token,
+    //         'user' => $user
+    //     ]);
+    // }
 
-    public function logout(Request $request)
-    {
-        $token = $request->header('Authorization');
+    // public function logout(Request $request)
+    // {
+    //     $token = $request->header('Authorization');
 
-        $user = User::where('remember_token', $token)->first();
+    //     $user = User::where('remember_token', $token)->first();
 
-        if (!$user) {
-            return response()->json(['message' => 'User tidak ditemukan'], 401);
-        }
+    //     if (!$user) {
+    //         return response()->json(['message' => 'User tidak ditemukan'], 401);
+    //     }
 
-        $user->remember_token = null;
-        $user->save();
+    //     $user->remember_token = null;
+    //     $user->save();
 
-        return response()->json(['message' => 'Logout berhasil']);
-    }
+    //     return response()->json(['message' => 'Logout berhasil']);
+    // }
 }

@@ -17,8 +17,6 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::post('logout', [UserController::class, 'logout']);
-
 Route::get('kategori', [KategoriController::class, 'index']);
 Route::get('kategori/{id}', [KategoriController::class, 'show']);
 Route::post('kategori/store', [KategoriController::class, 'store']);
