@@ -70,7 +70,7 @@ class BarangController extends Controller
         $dataBarang->nama_barang = $request->nama_barang;
         $dataBarang->jumlah = $request->jumlah;
         $dataBarang->harga = $request->harga;
-        $dataBarang->kategori_id = $request->kategoriId;
+        $dataBarang->kategori_id = $request->kategori_id;
         $dataBarang->barcode = $request->barcode;
         $dataBarang->deskripsi = $request->deskripsi;
         $dataBarang->foto_barang = $imagePath;
@@ -134,7 +134,7 @@ class BarangController extends Controller
         $dataBarang->nama_barang = $request->nama_barang;
         $dataBarang->jumlah = $request->jumlah;
         $dataBarang->harga = $request->harga;
-        $dataBarang->kategori_id = $request->kategoriId;
+        $dataBarang->kategori_id = $request->kategori_id;
         $dataBarang->barcode = $request->barcode;
         $dataBarang->deskripsi = $request->deskripsi;
 
