@@ -9,8 +9,14 @@ use Illuminate\Support\Facades\Storage;
 
 class BarangController extends Controller
 {
-    public function index(){
-        $data = Barang::all();
+    public function index(Request $request){
+        $userId = $request->header('user_id');
+
+        if ($userId) {
+            $data = Barang::where('user_id', $userId)->get();
+        } else {
+            $data = Barang::whereNull('user_id')->get();
+        }
 
         if(empty($data)){
             return response()->json([
@@ -26,21 +32,28 @@ class BarangController extends Controller
         }
     }
 
-    public function show($id){
-        $data = Barang::find($id);
+    public function show(Request $request, $id){
 
-        if(empty($data)){
-            return response()->json([
-                'status' => false,
-                'message' => "Tidak ada barang"
+        $userId = $request->header('user_id');
+        $data = Barang::where('id', $id)
+                  ->where(function ($query) use ($userId) {
+                      $query->where('user_id', $userId)
+                            ->orWhereNull('user_id');
+                  })
+                  ->first();
+
+        if (!$data) {
+        return response()->json([
+            'status' => false,
+            'message' => "Barang tidak ditemukan atau akses ditolak"
             ], 404);
-        }else{
-            return response()->json([
-                'status' => true,
-                'message' => "Barang berhasil ditemukan",
-                'data' => $data
-            ], 200);
         }
+
+        return response()->json([
+            'status' => true,
+            'message' => "Barang berhasil ditemukan",
+            'data' => $data
+        ], 200);
     }
 
     public function store(Request $request){
@@ -75,6 +88,8 @@ class BarangController extends Controller
         $dataBarang->deskripsi = $request->deskripsi;
         $dataBarang->foto_barang = $imagePath;
 
+        $dataBarang->user_id = $request->header('user_id');
+
         $post = $dataBarang->save();
 
         if($post){
@@ -92,14 +107,17 @@ class BarangController extends Controller
     }
 
     public function update(Request $request, $id){
-        $dataBarang = Barang::find($id);
+
+        $userId = $request->header('user_id');
+        $dataBarang = Barang::where('id', $id)->where('user_id', $userId)->first();
         
-        if(empty($dataBarang)){
+        if (!$dataBarang) {
             return response()->json([
                 'status' => false,
-                'message' => "Barang tidak ditemukan",
+                'message' => "Barang tidak ditemukan atau akses ditolak"
             ], 404);
         }
+
 
         $rules = [
             'nama_barang' => 'required|string',
@@ -154,26 +172,28 @@ class BarangController extends Controller
         }
     }
 
-    public function destroy($id){
-        $data = Barang::find($id);
+    public function destroy(Request $request, $id){
 
-        if(empty($data)){
+        $userId = $request->header('user_id');
+        $data = Barang::where('id', $id)->where('user_id', $userId)->first();
+
+        if (!$data) {
             return response()->json([
                 'status' => false,
-                'message' => "Barang tidak ditemukan"
+                'message' => "Barang tidak ditemukan atau akses ditolak"
             ], 404);
-        }else{
-            if ($data->foto_barang && Storage::disk('public')->exists($data->foto_barang)) {
-                Storage::disk('public')->delete($data->foto_barang);
-            }
-
-            $post = $data->delete();
-
-            return response()->json([
-                'status' => true,
-                'message' => "Barang berhasil dihapus",
-                'data' => $data
-            ], 200);
         }
+
+        if ($data->foto_barang && Storage::disk('public')->exists($data->foto_barang)) {
+            Storage::disk('public')->delete($data->foto_barang);
+        }
+
+        $data->delete();
+
+        return response()->json([
+            'status' => true,
+            'message' => "Barang berhasil dihapus",
+            'data' => $data
+        ], 200);
     }
 }
