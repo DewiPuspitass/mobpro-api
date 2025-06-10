@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Storage;
 class BarangController extends Controller
 {
     public function index(Request $request){
-        $userId = $request->header('user_id');
+        $userId = $request->header('User-Id');
 
         if ($userId) {
             $data = Barang::where('user_id', $userId)->get();
@@ -34,7 +34,7 @@ class BarangController extends Controller
 
     public function show(Request $request, $id){
 
-        $userId = $request->header('user_id');
+        $userId = $request->header('User-Id');
         $data = Barang::where('id', $id)
                   ->where(function ($query) use ($userId) {
                       $query->where('user_id', $userId)
@@ -88,7 +88,7 @@ class BarangController extends Controller
         $dataBarang->deskripsi = $request->deskripsi;
         $dataBarang->foto_barang = $imagePath;
 
-        $dataBarang->user_id = $request->header('user_id');
+        $dataBarang->user_id = $request->header('User-Id');
 
         $post = $dataBarang->save();
 
@@ -108,7 +108,7 @@ class BarangController extends Controller
 
     public function update(Request $request, $id){
 
-        $userId = $request->header('user_id');
+        $userId = $request->header('User-Id');
         $dataBarang = Barang::where('id', $id)->where('user_id', $userId)->first();
         
         if (!$dataBarang) {
@@ -174,7 +174,7 @@ class BarangController extends Controller
 
     public function destroy(Request $request, $id){
 
-        $userId = $request->header('user_id');
+        $userId = $request->header('User-Id');
         $data = Barang::where('id', $id)->where('user_id', $userId)->first();
 
         if (!$data) {
