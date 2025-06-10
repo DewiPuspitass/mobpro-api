@@ -17,7 +17,8 @@ class Barang extends Model
         'kategori_id',
         'barcode',
         'deskripsi',
-        'foto_barang'
+        'foto_barang',
+        'user_id'
     ];
 
     public function kategori()
