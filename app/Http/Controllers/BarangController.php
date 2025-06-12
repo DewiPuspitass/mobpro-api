@@ -9,6 +9,31 @@ use Illuminate\Support\Facades\Storage;
 
 class BarangController extends Controller
 {
+    public function statusBarang(Request $request){
+        $userId = $request->header('User-Id');
+
+        $outOfStockCount = Barang::where('jumlah', 0)->where(function ($query) use ($userId) {
+                      $query->where('user_id', $userId)
+                            ->orWhereNull('user_id');
+                  })->count();
+
+        $lowStockCount = Barang::where('jumlah', [1, 9])->where(function ($query) use ($userId) {
+                      $query->where('user_id', $userId)
+                            ->orWhereNull('user_id');
+                  })->count();
+
+        $totalItemsCount = Barang::where('user_id', $userId)->count();
+
+        return response()->json([
+            'success' => true,
+            'data' => [
+                'out_of_stock' => $outOfStockCount,
+                'low_stock' => $lowStockCount,
+                'total_items' => $totalItemsCount,
+            ]
+        ]);
+    }
+
     public function index(Request $request){
         $userId = $request->header('User-Id');
 

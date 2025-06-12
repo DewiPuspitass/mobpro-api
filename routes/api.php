@@ -24,6 +24,7 @@ Route::put('kategori/{id}', [KategoriController::class, 'update']);
 Route::delete('kategori/{id}', [KategoriController::class, 'destroy']);
 
 Route::get('barang', [BarangController::class, 'index']);
+Route::get('ketersediaan_barang', [BarangController::class, 'statusBarang']);
 Route::get('barang/{id}', [BarangController::class, 'show']);
 Route::post('barang/tambah', [BarangController::class, 'store']);
 Route::put('barang/{id}', [BarangController::class, 'update']);
