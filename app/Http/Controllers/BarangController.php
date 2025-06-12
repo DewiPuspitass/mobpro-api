@@ -17,10 +17,11 @@ class BarangController extends Controller
                             ->orWhereNull('user_id');
                   })->count();
 
-        $lowStockCount = Barang::where('jumlah', [1, 9])->where(function ($query) use ($userId) {
-                      $query->where('user_id', $userId)
-                            ->orWhereNull('user_id');
-                  })->count();
+        $lowStockCount = Barang::where('jumlah', '<', 10)
+                            ->where(function ($query) use ($userId) {
+                                $query->where('user_id', $userId)
+                                        ->orWhereNull('user_id');
+                            })->count();
 
         $totalItemsCount = Barang::where('user_id', $userId)->count();
 
