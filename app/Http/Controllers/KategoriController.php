@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Kategori;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Database\QueryException;
 
 class KategoriController extends Controller
 {
@@ -100,21 +101,36 @@ class KategoriController extends Controller
         }
     }
 
-    public function destroy($id){
+    public function destroy($id)
+    {
         $data = Kategori::find($id);
-            if(empty($data)){
-                return response()->json([
-                    'status' => false,
-                    'message' => "Data tidak ditemukan",
-                    'data' => $data
-                ], 404);
-            }
+        if (empty($data)) {
+            return response()->json([
+                'status' => false,
+                'message' => "Data tidak ditemukan",
+            ], 404);
+        }
 
-            $post = $data->delete();
+        try {
+            $data->delete();
 
             return response()->json([
-                'status' => 'true',
+                'status' => true, 
                 'message' => 'Data berhasil dihapus'
             ], 200);
+
+        } catch (QueryException $e) {
+            if ($e->getCode() === '23000') {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Maaf, kategori sedang dipakai oleh barang lain.'
+                ], 409);
+            }
+
+            return response()->json([
+                'status' => false,
+                'message' => 'Terjadi kesalahan pada server database.'
+            ], 500);
         }
     }
+}
